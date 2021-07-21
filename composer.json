@@ -1,0 +1,29 @@
+{
+  "name":        "inwebo/favicon.php",
+  "description": "Get favicon from url",
+  "type":        "library",
+  "license":     "GPL-3.0-or-later",
+  "authors": [
+    {
+      "name": "inwebo"
+    }
+  ],
+  "require": {
+    "php": ">=7.4",
+    "symfony/console": "^5.3",
+    "ext-dom": "*",
+    "ext-json": "*",
+    "ext-libxml": "*",
+    "ext-fileinfo": "*",
+    "ext-curl": "*"
+  },
+  "autoload": {
+    "psr-4": { "Inwebo\\Favicon\\": "" }
+  },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "git@github.com:inwebo/Favicon.php.git"
+    }
+  ]
+}

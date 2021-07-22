@@ -4,7 +4,7 @@
 
 ### Composer
 ```bash
-composer require inwebo/favicon.pgp
+composer require inwebo/favicon.php
 ```
 
 ### Git

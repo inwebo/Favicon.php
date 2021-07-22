@@ -34,7 +34,15 @@ class FaviconFactory
         $resolved = $urlResolver->resolve();
 
         $mime = $this->getMimeType($resolved);
-        $data = $this->getData($resolved);
+
+        // DO NOT ENCODE file with image/svg+xml mime-type
+        if('image/svg+xml' !== $mime) {
+            $data = $this->getData($resolved);
+        } else {
+            $data = file_get_contents($url);
+            echo $data;
+        }
+
 
         $favicon = new Favicon();
         $favicon->mimeType = $mime;

@@ -25,6 +25,7 @@ class DomDocumentFactory
         $this->url      = $url;
         $this->output   = $output;
         $this->document = new \DOMDocument();
+        $this->build();
     }
 
     private function build()

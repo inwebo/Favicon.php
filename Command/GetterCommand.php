@@ -51,18 +51,25 @@ class GetterCommand extends Command
                 if (false === $headers) {
                     $output->writeln(sprintf('Fail to reach %s', $url));
                 } else {
-                    $output->writeln(sprintf('Url available', self::SUCCESS));
-                    $faviconBuilder = new FaviconBuilder($url);
-//
-                    $faviconBuilder->getFinder()->getQueries()->attach(new IconQuery());
-                    $faviconBuilder->getFinder()->getQueries()->attach(new ShortcutIconQuery());
-                    $faviconBuilder->getFinder()->getQueries()->attach(new AppleTouchIconQuery());
-                    $faviconBuilder->getFinder()->getQueries()->attach(new AppleTouchPrecomposedQuery());
-                    $faviconBuilder->getFinder()->getQueries()->attach(new SvgQuery());
-//
-                    $favicons = $faviconBuilder->build();
-die();
-//                    var_dump($favicons);
+                    try {
+                        $output->writeln(sprintf('Url available', self::SUCCESS));
+                        $faviconBuilder = new FaviconBuilder($url);
+
+                        $faviconBuilder->getFinder()->getQueries()->attach(new IconQuery());
+                        $faviconBuilder->getFinder()->getQueries()->attach(new ShortcutIconQuery());
+                        $faviconBuilder->getFinder()->getQueries()->attach(new AppleTouchIconQuery());
+                        $faviconBuilder->getFinder()->getQueries()->attach(new AppleTouchPrecomposedQuery());
+                        $faviconBuilder->getFinder()->getQueries()->attach(new SvgQuery());
+
+                        $favicons = $faviconBuilder->build();
+
+                        echo $favicons[0]->data;
+
+                        $jsonData = array_merge($jsonData, $favicons);
+                    } catch (\Exception $e) {
+                        $output->writeln($e->getMessage());
+                    }
+
                 }
 
             }
@@ -70,7 +77,7 @@ die();
 
         $output->writeln(sprintf('Writing %s icon to json file', count($jsonData)));
 
-        file_put_contents('output/data.json', json_encode($jsonData));
+        file_put_contents('output/data.json', json_encode($jsonData, JSON_PRETTY_PRINT));
         $output->writeln('Done ');
 
         return Command::SUCCESS;

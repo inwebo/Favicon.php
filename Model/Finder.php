@@ -26,15 +26,12 @@ class Finder
 
     public function find(): array
     {
-        echo 'Finder::find';
         $return = [];
         $this->queries->rewind();
         while ($this->queries->valid()) {
-            echo 'Finder::find';
-
             /** @var \DOMNodeList $domNodeList */
             $domNodeList = $this->queries->current()->query($this->xPath);
-            var_dump($domNodeList->length);
+
             if ($domNodeList->length > 0) {
                 array_push($return, ...$domNodeList);
             }

@@ -2,6 +2,7 @@
 
 namespace Inwebo\Favicon\Model;
 
+use Inwebo\Favicon\Model\Queries\BasePathQuery;
 use Symfony\Component\Console\Output\Output;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -28,7 +29,6 @@ class FaviconBuilder
 
     public function build(): array
     {
-        echo 'build';
         $nodeArray = $this->finder->find();
         $favicons  = [];
 
@@ -36,16 +36,13 @@ class FaviconBuilder
             $this->output(sprintf('Found %s favicons', count($nodeArray)));
         }
 
-die('ko');
-
         foreach ($nodeArray as $node) {
-            echo 'node';
-//            $iconFactory = new FaviconFactory();
-//            $favicon     = $iconFactory->build($node);
-//
-//            if (!is_null($favicon)) {
-//                $favicons[] = $favicon;
-//            }
+            $iconFactory = new FaviconFactory($this->url);
+            $favicon     = $iconFactory->build($node);
+
+            if (!is_null($favicon)) {
+                $favicons[] = $favicon;
+            }
         }
 
         return $favicons;

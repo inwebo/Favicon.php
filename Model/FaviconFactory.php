@@ -5,8 +5,11 @@ namespace Inwebo\Favicon\Model;
 
 class FaviconFactory
 {
-    public function __construct()
+    protected string $domain;
+
+    public function __construct(string $domain)
     {
+        $this->domain = $domain;
     }
 
     protected function getMimeType(string $url): string
@@ -27,8 +30,11 @@ class FaviconFactory
     {
         $url = $node->getAttribute('href');
 
-        $mime = $this->getMimeType($url);
-        $data = $this->getData($url);
+        $urlResolver = new UrlResolver($this->domain, $url);
+        $resolved = $urlResolver->resolve();
+
+        $mime = $this->getMimeType($resolved);
+        $data = $this->getData($resolved);
 
         $favicon = new Favicon();
         $favicon->mimeType = $mime;

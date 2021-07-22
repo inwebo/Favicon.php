@@ -2,8 +2,12 @@
 
 namespace Inwebo\Favicon\Command;
 
-use Inwebo\Favicon\Model\Client;
-use Inwebo\Favicon\Model\Strategies\DefaultStrategy;
+use Inwebo\Favicon\Model\FaviconBuilder;
+use Inwebo\Favicon\Model\Queries\AppleTouchIconQuery;
+use Inwebo\Favicon\Model\Queries\AppleTouchPrecomposedQuery;
+use Inwebo\Favicon\Model\Queries\IconQuery;
+use Inwebo\Favicon\Model\Queries\ShortcutIconQuery;
+use Inwebo\Favicon\Model\Queries\SvgQuery;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -33,6 +37,8 @@ class GetterCommand extends Command
             foreach ($urls as $favorites) {
                 $url = $favorites->href;
 
+                $output->writeln(sprintf('Getting %s', $url));
+
                 /**
                  * Fail to reach $url
                  * @see https://stackoverflow.com/a/1133973
@@ -43,23 +49,22 @@ class GetterCommand extends Command
                 error_reporting($orig);
 
                 if (false === $headers) {
-                    continue;
+                    $output->writeln(sprintf('Fail to reach %s', $url));
                 } else {
-                    try  {
-                        $client     = new Client($url);
-                        $strategies = new \SplObjectStorage();
-                        $strategies->attach(new DefaultStrategy($client->getDocument()));
-
-                        $client
-                            ->setStrategies($strategies)
-                            ->execute()
-                        ;
-
-
-                    } catch (\Exception $e) {
-                        var_dump($e->getMessage());
-                    }
+                    $output->writeln(sprintf('Url available', self::SUCCESS));
+                    $faviconBuilder = new FaviconBuilder($url);
+//
+                    $faviconBuilder->getFinder()->getQueries()->attach(new IconQuery());
+                    $faviconBuilder->getFinder()->getQueries()->attach(new ShortcutIconQuery());
+                    $faviconBuilder->getFinder()->getQueries()->attach(new AppleTouchIconQuery());
+                    $faviconBuilder->getFinder()->getQueries()->attach(new AppleTouchPrecomposedQuery());
+                    $faviconBuilder->getFinder()->getQueries()->attach(new SvgQuery());
+//
+                    $favicons = $faviconBuilder->build();
+die();
+//                    var_dump($favicons);
                 }
+
             }
         }
 

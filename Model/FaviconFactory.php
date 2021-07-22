@@ -32,15 +32,14 @@ class FaviconFactory
 
         $urlResolver = new UrlResolver($this->domain, $url);
         $resolved = $urlResolver->resolve();
-
+        var_dump($resolved);
         $mime = $this->getMimeType($resolved);
-
+        var_dump($mime);
         // DO NOT ENCODE file with image/svg+xml mime-type
         if('image/svg+xml' !== $mime) {
             $data = $this->getData($resolved);
         } else {
             $data = file_get_contents($url);
-            echo $data;
         }
 
 

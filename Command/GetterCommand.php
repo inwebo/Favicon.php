@@ -63,15 +63,11 @@ class GetterCommand extends Command
 
                         $favicons = $faviconBuilder->build();
 
-                        echo $favicons[0]->data;
-
                         $jsonData = array_merge($jsonData, $favicons);
                     } catch (\Exception $e) {
                         $output->writeln($e->getMessage());
                     }
-
                 }
-
             }
         }
 

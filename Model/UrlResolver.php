@@ -60,10 +60,20 @@ class UrlResolver
         // absolute path eg : /images/fav.ico
         if ($this->isAbsolutPathUrl()) {
             $parse = parse_url($this->domain);
-            return sprintf('%s:%s%s', $parse['scheme'], $parse['host'], $this->iconUrl);
+            return sprintf('%s://%s%s', $parse['scheme'], $parse['host'], $this->iconUrl);
         }
 
         // relative URL eg : ../images/fav.ico
-        return null;
+        // Do not work
+        // @todo
+        if ($this->isRelativeUrl()) {
+            $parse = parse_url($this->domain);
+
+            $path = explode('/', $parse['path']);
+            array_pop($path);
+            $path = implode($path). '/';
+
+            return sprintf('%s://%s/%s%s', $parse['scheme'], $parse['host'], $path, $this->iconUrl);
+        }
     }
 }

@@ -25,7 +25,14 @@ class DomDocumentFactory
         $this->url      = $url;
         $this->output   = $output;
         $this->document = new \DOMDocument();
-        $this->build();
+
+        try {
+            $this->build();
+        } catch (\Exception $e) {
+            if (!is_null($this->output)) {
+                $this->output->writeln('    <error>404 not found</error>');
+            }
+        }
     }
 
     private function build()
@@ -35,7 +42,7 @@ class DomDocumentFactory
                 return false;
             }
 
-            throw new \ErrorException($errstr, 0, $errno, $errfile, $errline);
+            throw new \Exception(sprintf('%s 404 not found', $this->url), 0);
         });
 
         $content = file_get_contents($this->url);

@@ -53,7 +53,6 @@ class UrlResolver
         // absolute URL with relative scheme eg : //www.domain.com/images/fav.ico
         if ($this->isAbsoluteWithRelativeSchemeUrl()) {
             $scheme = parse_url($this->domain, PHP_URL_SCHEME);
-
             return sprintf('%s:%s', $scheme, $this->iconUrl);
         }
 
@@ -66,14 +65,16 @@ class UrlResolver
         // relative URL eg : ../images/fav.ico
         // Do not work
         // @todo
-        if ($this->isRelativeUrl()) {
-            $parse = parse_url($this->domain);
+//        if ($this->isRelativeUrl()) {
+//            $parse = parse_url($this->domain);
+//
+//            $path = explode('/', $parse['path']);
+//            array_pop($path);
+//            $path = implode($path). '/';
+//
+//            return sprintf('%s://%s/%s%s', $parse['scheme'], $parse['host'], $path, $this->iconUrl);
+//        }
 
-            $path = explode('/', $parse['path']);
-            array_pop($path);
-            $path = implode($path). '/';
-
-            return sprintf('%s://%s/%s%s', $parse['scheme'], $parse['host'], $path, $this->iconUrl);
-        }
+        return null;
     }
 }

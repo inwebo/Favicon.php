@@ -28,7 +28,7 @@ class GetterCommand extends Command
         $jsonData = [];
 
         $iterator = new \GlobIterator('input/*.json');
-        $output->writeln(sprintf('Reading %s json files', $iterator->count()),OutputInterface::OUTPUT_RAW);
+        $output->writeln(sprintf('<info>Reading %s json files</info>', $iterator->count()));
 
         /** @var \SplFileInfo $file */
         foreach ($iterator as $file) {
@@ -37,7 +37,7 @@ class GetterCommand extends Command
             foreach ($urls as $favorites) {
                 $url = $favorites->href;
 
-                $output->writeln(sprintf('Getting %s', $url));
+//                $output->writeln(sprintf('Getting %s', $url));
 
                 /**
                  * Fail to reach $url
@@ -49,11 +49,12 @@ class GetterCommand extends Command
                 error_reporting($orig);
 
                 if (false === $headers) {
-                    $output->writeln(sprintf('Fail to reach %s', $url));
+                    $output->writeln(sprintf('%s <error>✗</error>', $url));
                 } else {
                     try {
-                        $output->writeln(sprintf('Url available', self::SUCCESS));
-                        $faviconBuilder = new FaviconBuilder($url);
+                        $output->writeln(sprintf('%s <info>✔</info>', $url));
+
+                        $faviconBuilder = new FaviconBuilder($url, $output);
 
                         $faviconBuilder->getFinder()->getQueries()->attach(new IconQuery());
                         $faviconBuilder->getFinder()->getQueries()->attach(new ShortcutIconQuery());
@@ -62,10 +63,11 @@ class GetterCommand extends Command
                         $faviconBuilder->getFinder()->getQueries()->attach(new SvgQuery());
 
                         $favicons = $faviconBuilder->build();
+                        $output->writeln('');
 
                         $jsonData = array_merge($jsonData, $favicons);
                     } catch (\Exception $e) {
-                        $output->writeln($e->getMessage());
+                        $output->writeln(sprintf('<error>%s</error>', $e->getMessage()));
                     }
                 }
             }

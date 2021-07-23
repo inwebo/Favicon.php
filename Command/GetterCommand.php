@@ -50,6 +50,7 @@ class GetterCommand extends Command
 
                 if (false === $headers) {
                     $output->writeln(sprintf('%s <error>✗</error>', $url));
+                    $output->writeln('');
                 } else {
                     try {
                         $output->writeln(sprintf('%s <info>✔</info>', $url));
